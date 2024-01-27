@@ -1,7 +1,8 @@
 import random
 import time
+import pygame as pg
 
-from reaction import WrongNumber
+from reaction import WrongNumber, NoNumber, Timout, Correct
 
 
 class LevelInterface:
@@ -14,7 +15,7 @@ class LevelInterface:
     def check_time_left(self) -> int:
         pass
 
-    def register_answer(self, answer: str):
+    def register_answer(self, answer: str, all_objects: pg.sprite.Group) -> pg.sprite.Group:
         pass
 
     def __on_wrong_number(self):
@@ -26,20 +27,23 @@ class LevelInterface:
     def __on_timeout(self):
         pass
 
-    def __on_correct_answer(self):
+    def __on_correct_answer(self, all_objects: pg.sprite.Group):
         pass
 
-    def get_amount_of_objetcs(self) -> int:
+    def get_amount_of_objects(self) -> int:
+        pass
+
+    def is_stopped(self) -> bool:
         pass
 
 
 class SheepLevel(LevelInterface):
-    def __init__(self, question: str, difficulty: int, initial_timer: int = 60):
+    def __init__(self, question: str, difficulty: int, initial_timer: int = 5):
         self._startLevelTime: int = -1
         self._stopLevelTime: int = -1
         self.answer: str = ""
         self.question = question
-        self._amountOfObjects = random.randint(difficulty * 10, difficulty * 20)
+        self._amountOfObjects = random.randint(difficulty * 10 + 5, difficulty * 20 + 10)
         self._initialTimer = initial_timer
 
     def start(self):
@@ -50,35 +54,46 @@ class SheepLevel(LevelInterface):
         return self._startLevelTime != -1
 
     def check_time_left(self) -> int:
-        if int(time.time()) - self._startLevelTime >= self._initialTimer:
-            self.__on_timeout()
-        elif self._stopLevelTime != -1:
+        if self._stopLevelTime != -1:
             return self._initialTimer - (self._stopLevelTime - self._startLevelTime)
+        elif int(time.time()) - self._startLevelTime >= self._initialTimer:
+            self._stopLevelTime = int(time.time())
+            self.__on_timeout()
+            return 0
         return self._initialTimer - (int(time.time()) - self._startLevelTime)
 
-    def register_answer(self, answer: str):
+    def register_answer(self, answer: str, all_objects: pg.sprite.Group):
+        self._stopLevelTime = int(time.time())
         self.answer = answer
         if not answer.isdigit():
-            return self.__on_no_number()
+            self.__on_no_number()
+            return all_objects
         elif int(answer) == self._amountOfObjects:
-            self.__on_correct_answer()
-        return self.__on_wrong_number()
+            return self.__on_correct_answer(all_objects)
+        else:
+            self.__on_wrong_number()
+            return all_objects
 
     def __on_wrong_number(self):
         WrongNumber().execute()
-        pass
+        return
 
     def __on_no_number(self):
-        pass
+        NoNumber().execute()
+        return
 
     def __on_timeout(self):
-        pass
+        Timout().execute()
+        return
 
-    def __on_correct_answer(self):
-        pass
+    def __on_correct_answer(self, all_objects: pg.sprite.Group) -> pg.sprite.Group:
+        return Correct(all_objects).execute()
 
-    def get_amount_of_objetcs(self) -> int:
+    def get_amount_of_objects(self) -> int:
         return self._amountOfObjects
+
+    def is_stopped(self) -> bool:
+        return self._stopLevelTime != -1
 
 
 level: LevelInterface = SheepLevel("", 1)

@@ -25,7 +25,7 @@ def main():
     background.fill((102, 204, 10))
 
     # Load level and failure sound
-    currentLevel: LevelInterface = SheepLevel("How many objects are there?", 10)
+    currentLevel: LevelInterface = SheepLevel("How many objects are there?", 0)
 
     # Put Text On The Background, Centered
     if pg.font:
@@ -39,7 +39,7 @@ def main():
     pg.display.flip()
 
     # Prepare Game Objects
-    sheeps = co.generateHerd(currentLevel.get_amount_of_objetcs())
+    sheeps = co.generateHerd(currentLevel.get_amount_of_objects())
     allobjects = pg.sprite.Group(sheeps)
     allobjects.draw(screen)
     clock = pg.time.Clock()
@@ -48,10 +48,15 @@ def main():
     manager = ti.TextInputManager(validator=lambda input: len(input) <= 15)
     textinput = ti.TextInputVisualizer(manager)
 
+    # Start the timer of the level
+    currentLevel.start()
+
     # Main Loop
     going = True
     while going:
         clock.tick(60)
+        if not currentLevel.is_stopped():
+            currentLevel.check_time_left()
 
         events = pg.event.get()
 
@@ -63,13 +68,7 @@ def main():
                 # Close window if user presses ESC
                 going = False
             elif event.type == pg.KEYDOWN and event.key == pg.K_RETURN:
-                userinput = textinput.value
-                try:
-                    uiasint = int(userinput)
-                    print(uiasint)
-                    currentLevel.register_answer(str(uiasint))
-                except ValueError:
-                    print("That's not even an integer!")
+                allobjects = currentLevel.register_answer(textinput.value, allobjects)
                 textinput.value = ""
                 textinput.cursor_pos = 0
 
