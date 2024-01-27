@@ -6,6 +6,7 @@ import math
 main_dir = os.path.split(os.path.abspath(__file__))[0]
 data_dir = os.path.join(main_dir, "assets")
 
+# These specific dimensions make the fence look closed
 screen_width = 1000
 screen_height = 992
 
@@ -14,6 +15,12 @@ rb_topleft = (0.05 * screen_width, 0.05 * screen_height)
 rb_topright = (0.95 * screen_width, rb_topleft[1])
 rb_botleft = (rb_topleft[0], 0.8 * screen_height)
 rb_botright = (rb_topright[0], rb_botleft[1])
+
+# Impassable box (ib) (due to tree)
+#FIXME these numbers should work, but they don't
+ib_topleft = (200, 275)
+ib_width = 64
+ib_height = 26
 
 class SpriteSheet:
     def __init__(self, filename):
@@ -117,6 +124,11 @@ class CountingObject(pg.sprite.Sprite):
             # turn down
             self.directionX = 0
             self.directionY = 1
+        if ib_topleft[0] < self.rect.x < ib_topleft[0] + ib_width and ib_topleft[1] < self.rect.y < ib_topleft[1] + ib_height:
+            # turn away
+            self.directionX = -1 * self.directionX
+            self.directionY = -1 * self.directionY
+
 
         changeDirectionRandom = random.randint(0, self.maxChangeDirectionRandom)
         if changeDirectionRandom == 1:
@@ -152,7 +164,17 @@ def generateHerd(num):
     herd = []
     for _ in range(num):
         randX = random.randint(math.ceil(rb_topleft[0]), math.floor(rb_topright[0]) - 100)
-        randY = random.randint(math.ceil(rb_topleft[1]), math.floor(rb_botleft[1]) - 100)
+        # Decide whether to generate above of below the tree
+        if ib_topleft[0] < randX < ib_topleft[0] + ib_width:
+            # the X coordinate matches with the X coordinate of the obstacle
+            if random.random() < 0.5: #TODO ideally this would lead to a uniform distribution
+                # generate above the obstacle
+                randY = random.randint(math.ceil(rb_topleft[1]), ib_topleft[1])
+            else:
+                # generate below the obstacle
+                randY = random.randint(ib_topleft[1] + ib_height, math.floor(rb_botleft[1]) - 100)
+        else:
+            randY = random.randint(math.ceil(rb_topleft[1]), math.floor(rb_botleft[1]) - 100)
         herd.append(CountingObject(initialPos=(randX,randY)))
     return herd
 

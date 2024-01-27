@@ -42,6 +42,9 @@ def main():
     vertical_fence, vertical_fence_rect = co.load_image("vertical_fence.png",-1,2)
     horizontal_fence, horizontal_fence_rect = co.load_image("horizontal_fence.png",-1,2)
 
+    # Get the tree
+    tree, tree_rect = co.load_image("tree.png",-1,0.5)
+
     # Get X
     errorScreen, errorScreenRect = co.load_image("x.png",-1,8)
 
@@ -117,6 +120,9 @@ def main():
             screen.blit(horizontal_fence,(co.rb_botleft[0] + small_fence_width * i, co.rb_botleft[1]))
 
         allobjects.draw(screen)
+
+        # Draw tree
+        screen.blit(tree,(200, 200))
 
         if currentLevel.is_stopped():
             text = font.render("Press enter to reset", True, (10, 10, 10))
