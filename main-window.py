@@ -42,6 +42,9 @@ def main():
     vertical_fence, vertical_fence_rect = co.load_image("vertical_fence.png",-1,2)
     horizontal_fence, horizontal_fence_rect = co.load_image("horizontal_fence.png",-1,2)
 
+    # Get X
+    errorScreen, errorScreenRect = co.load_image("x.png",-1,8)
+
     # Prepare Game Objects
     sheeps = co.generateHerd(currentLevel.get_amount_of_objects())
     allobjects = pg.sprite.Group(sheeps)
@@ -57,8 +60,11 @@ def main():
     # Main Loop
     going = True
     timer = 0
+    errorScreenTimer = 0
+    fps=60
+
     while going:
-        clock.tick(60)
+        clock.tick(fps)
         events = pg.event.get()
         if currentLevel.is_stopped():
             # Handle Input Events
@@ -74,6 +80,7 @@ def main():
                     allobjects = pg.sprite.Group(sheeps)
                     textinput.value = ""
                     textinput.cursor_pos = 0
+                    errorScreenTimer = 0
         else:
             timer = currentLevel.check_time_left()
 
@@ -109,6 +116,8 @@ def main():
             screen.blit(horizontal_fence,(co.rb_topleft[0] + small_fence_width * i, co.rb_topleft[1]))
             screen.blit(horizontal_fence,(co.rb_botleft[0] + small_fence_width * i, co.rb_botleft[1]))
 
+        allobjects.draw(screen)
+
         if currentLevel.is_stopped():
             text = font.render("Press enter to reset", True, (10, 10, 10))
             textpos = text.get_rect(centerx=background.get_width() / 2, y=background.get_height() / 2)
@@ -118,11 +127,15 @@ def main():
             textpos = text.get_rect(centerx=background.get_width() / 2, y=background.get_height() - 100)
             screen.blit(text, textpos)
 
-        allobjects.draw(screen)
+        
 
         if not currentLevel.is_stopped():
             textinput.update(events)
             screen.blit(textinput.surface, (background.get_width() / 2 - 150, co.rb_botleft[1] + 100), (0,0,300,100))
+
+        if currentLevel.is_stopped() and errorScreenTimer <= 3*fps:
+            screen.blit(errorScreen,(0,0))
+            errorScreenTimer += 1
 
         timerColor=(0,0,0)
         if timer <= 5:
