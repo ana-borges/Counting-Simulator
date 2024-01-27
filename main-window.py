@@ -25,7 +25,7 @@ def main():
     background.fill((102, 204, 10))
 
     # Load level and failure sound
-    currentLevel: LevelInterface = SheepLevel("How many objects are there?", 1)
+    currentLevel: LevelInterface = SheepLevel("How many objects are there?", 10)
 
     # Put Text On The Background, Centered
     if pg.font:
@@ -39,7 +39,7 @@ def main():
     pg.display.flip()
 
     # Prepare Game Objects
-    sheeps = co.generateHerd(10)
+    sheeps = co.generateHerd(currentLevel.get_amount_of_objetcs())
     allobjects = pg.sprite.Group(sheeps)
     allobjects.draw(screen)
     clock = pg.time.Clock()
@@ -69,6 +69,7 @@ def main():
                     uiasint = int(userinput)
                     print(uiasint)
                     receiveinput = False
+                    currentLevel.register_answer(str(uiasint))
                 except ValueError:
                     print("That's not even an integer!")
 

@@ -29,6 +29,9 @@ class LevelInterface:
     def __on_correct_answer(self):
         pass
 
+    def get_amount_of_objetcs(self) -> int:
+        pass
+
 
 class SheepLevel(LevelInterface):
     def __init__(self, question: str, difficulty: int, initial_timer: int = 60):
@@ -73,6 +76,9 @@ class SheepLevel(LevelInterface):
 
     def __on_correct_answer(self):
         pass
+
+    def get_amount_of_objetcs(self) -> int:
+        return self._amountOfObjects
 
 
 level: LevelInterface = SheepLevel("", 1)
