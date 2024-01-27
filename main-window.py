@@ -3,7 +3,7 @@ import pygame as pg
 import counting_objects as co
 import pygame_textinput as ti
 
-#from level import Level
+from level import SheepLevel, LevelInterface
 
 if not pg.font:
     print("Warning, fonts disabled")
@@ -25,8 +25,7 @@ def main():
     background.fill((102, 204, 10))
 
     # Load level and failure sound
-    #currentLevel = Level("what is my age", "uh_you_suck.wav", 2, 5)
-    #failureSound = pg.mixer.Sound(currentLevel.failureSound)
+    currentLevel: LevelInterface = SheepLevel("How many objects are there?", 1)
 
     # Put Text On The Background, Centered
     if pg.font:

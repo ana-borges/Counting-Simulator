@@ -1,38 +1,78 @@
 import random
 import time
 
-class Level:
-    startLevelTime = None
+from reaction import WrongNumber
 
-    def __init__(self, question, failureSound, amountOfObject=None, initialTimer=60):
+
+class LevelInterface:
+    def start(self):
+        pass
+
+    def is_started(self) -> bool:
+        pass
+
+    def check_time_left(self) -> int:
+        pass
+
+    def register_answer(self, answer: str):
+        pass
+
+    def __on_wrong_number(self):
+        pass
+
+    def __on_no_number(self):
+        pass
+
+    def __on_timeout(self):
+        pass
+
+    def __on_correct_answer(self):
+        pass
+
+
+class SheepLevel(LevelInterface):
+    def __init__(self, question: str, difficulty: int, initial_timer: int = 60):
+        self._startLevelTime: int = -1
+        self._stopLevelTime: int = -1
+        self.answer: str = ""
         self.question = question
-        self.amountOfObject = amountOfObject
-        if amountOfObject is None:
-            self.amountOfObject = random.randint(0, 10)
-        self.initialTimer = initialTimer
-        self.failureSound = "sounds/" + failureSound
-
-    def __str__(self):
-        return "question: " + self.question + "\nnumber of objects: " + str(
-            self.amountOfObject) + "\ninitial timer(seconds): " + str(self.initialTimer)
+        self._amountOfObjects = random.randint(difficulty * 10, difficulty * 20)
+        self._initialTimer = initial_timer
 
     def start(self):
-        self.startLevelTime = int(time.time())
+        self._startLevelTime = int(time.time())
         return
 
-    def isLevelFinished(self):
-        return int(time.time()) - self.startLevelTime >= self.initialTimer
+    def is_started(self) -> bool:
+        return self._startLevelTime != -1
 
-    def timeLeft(self):
-        return self.initialTimer - (int(time.time()) - self.startLevelTime)
+    def check_time_left(self) -> int:
+        if int(time.time()) - self._startLevelTime >= self._initialTimer:
+            self.__on_timeout()
+        elif self._stopLevelTime != -1:
+            return self._initialTimer - (self._stopLevelTime - self._startLevelTime)
+        return self._initialTimer - (int(time.time()) - self._startLevelTime)
+
+    def register_answer(self, answer: str):
+        self.answer = answer
+        if not answer.isdigit():
+            return self.__on_no_number()
+        elif int(answer) == self._amountOfObjects:
+            self.__on_correct_answer()
+        return self.__on_wrong_number()
+
+    def __on_wrong_number(self):
+        WrongNumber().execute()
+        pass
+
+    def __on_no_number(self):
+        pass
+
+    def __on_timeout(self):
+        pass
+
+    def __on_correct_answer(self):
+        pass
 
 
-levelOne = Level("what is my age", "uh_you_suck.wav", 2, 5)
-
-print(levelOne)
-
-levelOne.start()
-
-while levelOne.isLevelFinished() is not True:
-    time.sleep(1)
-    print("time remaining: " + str(levelOne.timeLeft()))
+level: LevelInterface = SheepLevel("", 1)
