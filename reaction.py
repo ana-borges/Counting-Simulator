@@ -2,20 +2,16 @@ import random
 import pygame as pg
 import counting_objects as co
 
-
+ask_picture_question = False
 class ReactionInterface:
     def execute(self):
         pass
 
 
 class WrongNumber(ReactionInterface):
-    def __init__(self):
-        self._soundFile: str = random.choice(["sounds/UH_YOU_SUCK.wav"])
-        self._failureSound = pg.mixer.Sound(self._soundFile)
-        return
-
     def execute(self):
-        pg.mixer.Sound.play(self._failureSound)
+        sound_file: str = random.choice(["sounds/UH_YOU_SUCK.wav", "sounds/BUZZER.wav"])
+        pg.mixer.Sound.play(pg.mixer.Sound(sound_file))
         return
 
 
@@ -49,5 +45,16 @@ class Correct(ReactionInterface):
     def execute(self) -> pg.sprite.Group:
         new_sheep = co.generateHerd(1)
         self._allObjects.add(new_sheep)
+        pg.mixer.Sound.play(self._failureSound)
+        return self._allObjects
+
+class CorrectPicture(ReactionInterface):
+    def __init__(self, all_objects: pg.sprite.Group):
+        self._soundFile: str = random.choice(["sounds/PICTURE_QUESTION.wav"])
+        self._failureSound = pg.mixer.Sound(self._soundFile)
+        self._allObjects = all_objects
+        return
+
+    def execute(self) -> pg.sprite.Group:
         pg.mixer.Sound.play(self._failureSound)
         return self._allObjects

@@ -2,6 +2,7 @@ import os
 import pygame as pg
 import counting_objects as co
 import pygame_textinput as ti
+import pygame.camera as ca
 import math
 
 from level import SheepLevel, LevelInterface
@@ -17,6 +18,12 @@ def main():
     a loop until the function returns."""
     # Initialize Everything
     pg.init()
+    ca.init()
+    camlist = ca.list_cameras()
+    if camlist:
+        cam = ca.Camera(camlist[0], (1920, 1080), "RGB")
+    cam.start()
+    print(cam.get_size())
     screen = pg.display.set_mode((co.screen_width, co.screen_height), pg.SCALED)
     pg.display.set_caption("Counting Simulator")
 
@@ -24,6 +31,11 @@ def main():
     background = pg.Surface(screen.get_size())
     background = background.convert()
     background.fill((102, 204, 10))
+
+    snapshot = pg.surface.Surface((1920, 1080), 0, screen)
+
+    # snapshot = cam.get_image(snapshot)
+    # screen.blit(snapshot, (-500, -200))
 
     # Load level and failure sound
     currentLevel: LevelInterface = SheepLevel("How many objects are there?", 0)
