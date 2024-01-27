@@ -3,6 +3,8 @@ import pygame as pg
 import counting_objects as co
 
 ask_picture_question = False
+deadSheep = False
+
 class ReactionInterface:
     def execute(self):
         pass
@@ -51,10 +53,19 @@ class Correct(ReactionInterface):
 class CorrectPicture(ReactionInterface):
     def __init__(self, all_objects: pg.sprite.Group):
         self._soundFile: str = random.choice(["sounds/PICTURE_QUESTION.wav"])
+    def execute(self) -> pg.sprite.Group:
+        pg.mixer.Sound.play(self._failureSound)
+        return self._allObjects
+
+class DeadSheep(ReactionInterface):
+    def __init__(self, all_objects: pg.sprite.Group):
+        self._soundFile: str = random.choice(["sounds/DEAD_SHEEP.wav"])
         self._failureSound = pg.mixer.Sound(self._soundFile)
         self._allObjects = all_objects
         return
 
-    def execute(self) -> pg.sprite.Group:
+    def execute(self):
+        global deadSheep
+        deadSheep=True
         pg.mixer.Sound.play(self._failureSound)
         return self._allObjects

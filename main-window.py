@@ -4,6 +4,7 @@ import counting_objects as co
 import pygame_textinput as ti
 import pygame.camera as ca
 import math
+import reaction
 
 from level import SheepLevel, LevelInterface
 
@@ -58,9 +59,13 @@ def main():
     errorScreen, errorScreenRect = co.load_image("x.png",-1,8)
 
     # Prepare Game Objects
-    sheeps = co.generateHerd(currentLevel.get_amount_of_objects())
+    sheeps = co.generateHerd(currentLevel.get_amount_of_objects() - 1)
     allobjects = pg.sprite.Group(sheeps)
     clock = pg.time.Clock()
+
+    # Sheep that dies
+    dyingSheep = co.generateHerd(1)
+    dyingSheepObjects = pg.sprite.Group(dyingSheep)
 
     # Create TextInput-object with at most 15 characters
     manager = ti.TextInputManager(validator=lambda input: len(input) <= 15)
@@ -88,8 +93,10 @@ def main():
                     going = False
                 elif event.type == pg.KEYDOWN and event.key == pg.K_RETURN:
                     currentLevel.reset()
-                    sheeps = co.generateHerd(currentLevel.get_amount_of_objects())
+                    sheeps = co.generateHerd(currentLevel.get_amount_of_objects() - 1)
                     allobjects = pg.sprite.Group(sheeps)
+                    dyingSheep = co.generateHerd(1)
+                    dyingSheepObjects = pg.sprite.Group(dyingSheep)
                     textinput.value = ""
                     textinput.cursor_pos = 0
                     errorScreenTimer = 0
@@ -109,6 +116,7 @@ def main():
                     textinput.cursor_pos = 0
 
         allobjects.update()
+        dyingSheepObjects.update(currentLevel.is_stopped() and reaction.deadSheep, None)
 
         # Draw background
         screen.blit(background, (0, 0))
@@ -129,6 +137,7 @@ def main():
             screen.blit(horizontal_fence,(co.rb_botleft[0] + small_fence_width * i, co.rb_botleft[1]))
 
         allobjects.draw(screen)
+        dyingSheepObjects.draw(screen)
 
         if currentLevel.is_stopped():
             text = font.render("Press enter to reset", True, (10, 10, 10))

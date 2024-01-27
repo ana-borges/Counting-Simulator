@@ -2,8 +2,7 @@ import random
 import time
 import pygame as pg
 
-from reaction import WrongNumber, NoNumber, Timout, Correct, CorrectPicture
-
+from reaction import WrongNumber, NoNumber, Timout, Correct, CorrectPicture, DeadSheep
 
 class LevelInterface:
     def start(self):
@@ -94,7 +93,7 @@ class SheepLevel(LevelInterface):
         return
 
     def __on_correct_answer(self, all_objects: pg.sprite.Group) -> pg.sprite.Group:
-        return random.choice([Correct(all_objects), CorrectPicture(all_objects)]).execute()
+        return random.choice([Correct(all_objects),CorrectPicture(all_objects), DeadSheep(all_objects)]).execute()
 
     def get_amount_of_objects(self) -> int:
         return self._amountOfObjects

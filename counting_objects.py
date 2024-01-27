@@ -82,6 +82,7 @@ class CountingObject(pg.sprite.Sprite):
     ramSprites = None
     directionX = 1
     directionY = 0
+    isFlipped = False
 
     def __init__(self, initialPos, maxChangeDirectionRandom=250):
         pg.sprite.Sprite.__init__(self)  # call Sprite initializer
@@ -96,7 +97,14 @@ class CountingObject(pg.sprite.Sprite):
         self.initialPos = initialPos
         self.maxChangeDirectionRandom = maxChangeDirectionRandom
 
-    def update(self):
+    def update(self, *args, **_):
+        if args and args[0]:
+            self.isFlipped = True
+
+        if self.isFlipped:
+            self.image = pg.transform.flip(self.ramSprites["left"][0], False, True)
+            return
+
         self.currentSpriteIndex += 1
 
         # Check whether out of bounds
