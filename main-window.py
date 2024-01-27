@@ -1,8 +1,9 @@
 import os
 import pygame as pg
 import counting_objects as co
+import pygame_textinput as ti
 
-from level import Level
+#from level import Level
 
 if not pg.font:
     print("Warning, fonts disabled")
@@ -24,8 +25,8 @@ def main():
     background.fill((102, 204, 10))
 
     # Load level and failure sound
-    currentLevel = Level("what is my age", "uh_you_suck.wav", 2, 5)
-    failureSound = pg.mixer.Sound(currentLevel.failureSound)
+    #currentLevel = Level("what is my age", "uh_you_suck.wav", 2, 5)
+    #failureSound = pg.mixer.Sound(currentLevel.failureSound)
 
     # Put Text On The Background, Centered
     if pg.font:
@@ -44,27 +45,41 @@ def main():
     allobjects.draw(screen)
     clock = pg.time.Clock()
 
+    # Create TextInput-object with at most 15 characters
+    manager = ti.TextInputManager(validator=lambda input: len(input) <= 15)
+    textinput = ti.TextInputVisualizer(manager)
+
     # Main Loop
     going = True
     while going:
         clock.tick(60)
 
+        events = pg.event.get()
+
         # Handle Input Events
-        for event in pg.event.get():
+        for event in events:
             if event.type == pg.QUIT:
                 going = False
             elif event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
                 # Close window if user presses ESC
                 going = False
-            elif event.type == pg.KEYDOWN:
-                print("A key! A key, I say!")
-                pg.mixer.Sound.play(failureSound)
+            elif event.type == pg.KEYDOWN and event.key == pg.K_RETURN:
+                userinput = textinput.value
+                try:
+                    uiasint = int(userinput)
+                    print(uiasint)
+                except ValueError:
+                    print("That's not even an integer!")
 
         allobjects.update()
 
         # Draw Everything
         screen.blit(background, (0, 0))
         allobjects.draw(screen)
+
+        textinput.update(events)
+        screen.blit(textinput.surface, (background.get_width() / 2 - 150, background.get_height() - 50), (0,0,300,100))
+
         pg.display.flip()
 
     pg.quit()
