@@ -39,8 +39,8 @@ def main():
     pg.display.flip()
 
     # Prepare Game Objects
-    diamond = co.CountingObjects()
-    allobjects = pg.sprite.Group(diamond)
+    sheep = co.CountingObject()
+    allobjects = pg.sprite.Group(sheep)
     allobjects.draw(screen)
     clock = pg.time.Clock()
 
