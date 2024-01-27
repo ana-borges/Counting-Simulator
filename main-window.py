@@ -35,9 +35,6 @@ def main():
 
     snapshot = pg.surface.Surface((1920, 1080), 0, screen)
 
-    # snapshot = cam.get_image(snapshot)
-    # screen.blit(snapshot, (-500, -200))
-
     # Load level and failure sound
     currentLevel: LevelInterface = SheepLevel("How many objects are there?", 0)
 
@@ -79,28 +76,48 @@ def main():
     timer = 0
     errorScreenTimer = 0
     fps=60
+    show_picture = False
 
     while going:
         clock.tick(fps)
         events = pg.event.get()
         if currentLevel.is_stopped():
-            # Handle Input Events
-            for event in events:
-                if event.type == pg.QUIT:
-                    going = False
-                elif event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
-                    # Close window if user presses ESC
-                    going = False
-                elif event.type == pg.KEYDOWN and event.key == pg.K_RETURN:
-                    currentLevel.reset()
-                    sheeps = co.generateHerd(currentLevel.get_amount_of_objects() - 1)
-                    allobjects = pg.sprite.Group(sheeps)
-                    dyingSheep = co.generateHerd(1)
-                    dyingSheepObjects = pg.sprite.Group(dyingSheep)
-                    textinput.value = ""
-                    textinput.cursor_pos = 0
-                    errorScreenTimer = 0
-                    reaction.deadSheep = False
+            if reaction.ask_picture_question:
+                if pg.mixer.get_busy():
+                    continue
+                for event in events:
+                    if event.type == pg.QUIT:
+                        going = False
+                    elif event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
+                        # Close window if user presses ESC
+                        going = False
+                    elif event.type == pg.KEYDOWN and event.key == pg.K_y:
+                        pg.mixer.Sound.play(pg.mixer.Sound("sounds/YES_PICTURE.wav"))
+                        reaction.ask_picture_question = False
+                        snapshot = cam.get_image(snapshot)
+                        screen.blit(snapshot, (-500, -200))
+                        show_picture = True
+                    elif event.type == pg.KEYDOWN and event.key == pg.K_n:
+                        pg.mixer.Sound.play(pg.mixer.Sound("sounds/NO_PICTURE.wav"))
+                        reaction.ask_picture_question = False
+            else:
+                for event in events:
+                    if event.type == pg.QUIT:
+                        going = False
+                    elif event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
+                        # Close window if user presses ESC
+                        going = False
+                    elif event.type == pg.KEYDOWN and event.key == pg.K_RETURN:
+                        currentLevel.reset()
+                        sheeps = co.generateHerd(currentLevel.get_amount_of_objects())
+                        allobjects = pg.sprite.Group(sheeps)
+                        dyingSheep = co.generateHerd(1)
+                        dyingSheepObjects = pg.sprite.Group(dyingSheep)
+                        textinput.value = ""
+                        textinput.cursor_pos = 0
+                        errorScreenTimer = 0
+                        show_picture = False
+                        reaction.deadSheep = False
         else:
             timer = currentLevel.check_time_left()
 
@@ -116,35 +133,44 @@ def main():
                     textinput.value = ""
                     textinput.cursor_pos = 0
 
-        allobjects.update()
-        dyingSheepObjects.update(currentLevel.is_stopped() and reaction.deadSheep, None)
+        if not reaction.ask_picture_question and not show_picture:
+            allobjects.update()
+            dyingSheepObjects.update(currentLevel.is_stopped() and reaction.deadSheep, None)
 
-        # Draw background
-        screen.blit(background, (0, 0))
 
-        # Draw fence
-        full_fence_height = co.rb_botleft[1] - co.rb_topleft[1]
-        small_fence_height = vertical_fence.get_height()
-        number_of_small_vfences = math.ceil(full_fence_height / small_fence_height)
-        for i in range(number_of_small_vfences):
-            screen.blit(vertical_fence,(co.rb_topleft[0], co.rb_topleft[1] + small_fence_height * i))
-            screen.blit(vertical_fence,(co.rb_topright[0], co.rb_topright[1] + small_fence_height * i))
+        if not show_picture:
+            # Draw background
+            screen.blit(background, (0, 0))
 
-        full_fence_width = co.rb_topright[0] - co.rb_topleft[0]
-        small_fence_width = horizontal_fence.get_width() + 5
-        number_of_small_hfences = math.ceil(full_fence_width / small_fence_width)
-        for i in range(number_of_small_hfences):
-            screen.blit(horizontal_fence,(co.rb_topleft[0] + small_fence_width * i, co.rb_topleft[1]))
-            screen.blit(horizontal_fence,(co.rb_botleft[0] + small_fence_width * i, co.rb_botleft[1]))
+            # Draw fence
+            full_fence_height = co.rb_botleft[1] - co.rb_topleft[1]
+            small_fence_height = vertical_fence.get_height()
+            number_of_small_vfences = math.ceil(full_fence_height / small_fence_height)
+            for i in range(number_of_small_vfences):
+                screen.blit(vertical_fence,(co.rb_topleft[0], co.rb_topleft[1] + small_fence_height * i))
+                screen.blit(vertical_fence,(co.rb_topright[0], co.rb_topright[1] + small_fence_height * i))
 
-        allobjects.draw(screen)
-        dyingSheepObjects.draw(screen)
+            full_fence_width = co.rb_topright[0] - co.rb_topleft[0]
+            small_fence_width = horizontal_fence.get_width() + 5
+            number_of_small_hfences = math.ceil(full_fence_width / small_fence_width)
+            for i in range(number_of_small_hfences):
+                screen.blit(horizontal_fence,(co.rb_topleft[0] + small_fence_width * i, co.rb_topleft[1]))
+                screen.blit(horizontal_fence,(co.rb_botleft[0] + small_fence_width * i, co.rb_botleft[1]))
 
-        if currentLevel.is_stopped():
+            allobjects.draw(screen)
+            dyingSheepObjects.draw(screen)
+        else:
+            screen.blit(snapshot, (-500, -200))
+
+        if currentLevel.is_stopped() and not reaction.ask_picture_question:
             text = font.render("Press enter to reset", True, (10, 10, 10))
             textpos = text.get_rect(centerx=background.get_width() / 2, y=background.get_height() / 2)
             screen.blit(text, textpos)
-        else:
+        elif reaction.ask_picture_question:
+            text = font.render("Press 'y' to take a picture or 'n' if not.", True, (10, 10, 10))
+            textpos = text.get_rect(centerx=background.get_width() / 2, y=background.get_height() / 2)
+            screen.blit(text, textpos)
+        elif not currentLevel.is_stopped():
             text = font.render(currentLevel.get_question(), True, (10, 10, 10))
             textpos = text.get_rect(centerx=background.get_width() / 2, y=background.get_height() - 100)
             screen.blit(text, textpos)
@@ -155,7 +181,7 @@ def main():
             textinput.update(events)
             screen.blit(textinput.surface, (background.get_width() / 2 - 100, textpos[1] + 50), (0,0,300,100))
 
-        if currentLevel.is_stopped() and errorScreenTimer <= 3*fps:
+        if currentLevel.is_stopped() and errorScreenTimer <= 3*fps and not reaction.ask_picture_question and not show_picture:
             screen.blit(errorScreen,(0,0))
             errorScreenTimer += 1
 
