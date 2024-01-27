@@ -103,7 +103,7 @@ def main():
             screen.blit(vertical_fence,(co.rb_topright[0], co.rb_topright[1] + small_fence_height * i))
 
         full_fence_width = co.rb_topright[0] - co.rb_topleft[0]
-        small_fence_width = horizontal_fence.get_width() + 0.1 * horizontal_fence.get_width()
+        small_fence_width = horizontal_fence.get_width() + 5
         number_of_small_hfences = math.ceil(full_fence_width / small_fence_width)
         for i in range(number_of_small_hfences):
             screen.blit(horizontal_fence,(co.rb_topleft[0] + small_fence_width * i, co.rb_topleft[1]))

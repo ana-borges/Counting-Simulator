@@ -1,12 +1,13 @@
 import os
 import pygame as pg
 import random
+import math
 
 main_dir = os.path.split(os.path.abspath(__file__))[0]
 data_dir = os.path.join(main_dir, "assets")
 
 screen_width = 1000
-screen_height = 1000
+screen_height = 992
 
 # Roaming bounds (rb)
 rb_topleft = (0.05 * screen_width, 0.05 * screen_height)
@@ -150,8 +151,8 @@ class CountingObject(pg.sprite.Sprite):
 def generateHerd(num):
     herd = []
     for _ in range(num):
-        randX = random.randint(rb_topleft[0], rb_topright[0] - 100)
-        randY = random.randint(rb_topleft[1], rb_botleft[1] - 100)
+        randX = random.randint(math.ceil(rb_topleft[0]), math.floor(rb_topright[0]) - 100)
+        randY = random.randint(math.ceil(rb_topleft[1]), math.floor(rb_botleft[1]) - 100)
         herd.append(CountingObject(initialPos=(randX,randY)))
     return herd
 
