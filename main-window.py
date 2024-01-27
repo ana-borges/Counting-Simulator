@@ -1,6 +1,8 @@
 import os
 import pygame as pg
 
+from level import Level
+
 if not pg.font:
     print("Warning, fonts disabled")
 if not pg.mixer:
@@ -59,6 +61,10 @@ def main():
     background = background.convert()
     background.fill((102, 204, 10))
 
+    # Load level and failure sound
+    currentLevel = Level("what is my age", "uh_you_suck.wav", 2, 5)
+    failureSound = pg.mixer.Sound(currentLevel.failureSound)
+
     # Put Text On The Background, Centered
     if pg.font:
         font = pg.font.Font(None, 64)
@@ -90,6 +96,7 @@ def main():
                 going = False
             elif event.type == pg.KEYDOWN:
                 print("A key! A key, I say!")
+                pg.mixer.Sound.play(failureSound)
 
         allobjects.update()
 
