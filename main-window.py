@@ -25,14 +25,16 @@ def main():
     background.fill((102, 204, 10))
 
     # Load level and failure sound
-    currentLevel: LevelInterface = SheepLevel("How many objects are there?", 0)
+    currentLevel: LevelInterface = SheepLevel("How many objects are there?", 0, initial_timer=10)
 
     # Put Text On The Background, Centered
-    if pg.font:
-        font = pg.font.Font(None, 64)
-        text = font.render("How many objects are there?", True, (10, 10, 10))
-        textpos = text.get_rect(centerx=background.get_width() / 2, y=background.get_height() - 100)
-        background.blit(text, textpos)
+    if not pg.font:
+        return 1
+
+    font = pg.font.Font(None, 64)
+    text = font.render("How many objects are there?", True, (0, 0, 0))
+    textpos = text.get_rect(centerx=background.get_width() / 2, y=background.get_height() - 100)
+    background.blit(text, textpos)
 
     # Display The Background
     screen.blit(background, (0, 0))
@@ -53,10 +55,11 @@ def main():
 
     # Main Loop
     going = True
+    timer = 0
     while going:
         clock.tick(60)
         if not currentLevel.is_stopped():
-            currentLevel.check_time_left()
+            timer = currentLevel.check_time_left()
 
         events = pg.event.get()
 
@@ -77,6 +80,14 @@ def main():
         # Draw Everything
         screen.blit(background, (0, 0))
         allobjects.draw(screen)
+
+
+        timerColor=(0,0,0)
+        if timer <= 5:
+            timerColor=(255,0,0)
+        text = font.render(str(timer), True, timerColor)
+        textpos = text.get_rect(centerx=background.get_width() - 100, y=50)
+        screen.blit(text, textpos)
 
         textinput.update(events)
         screen.blit(textinput.surface, (background.get_width() / 2 - 150, background.get_height() - 50), (0,0,300,100))
