@@ -5,6 +5,14 @@ import random
 main_dir = os.path.split(os.path.abspath(__file__))[0]
 data_dir = os.path.join(main_dir, "assets")
 
+screen_width = 1000
+screen_height = 1000
+
+# Roaming bounds (rb)
+rb_topleft = (0.05 * screen_width, 0.05 * screen_height)
+rb_topright = (0.95 * screen_width, rb_topleft[1])
+rb_botleft = (rb_topleft[0], 0.8 * screen_height)
+rb_botright = (rb_topright[0], rb_botleft[1])
 
 class SpriteSheet:
     def __init__(self, filename):
@@ -22,7 +30,7 @@ class SpriteSheet:
         image = pg.Surface(rect.size).convert()
         image.blit(self.sheet, (0, 0), rect)
         if colorkey is not None:
-            if colorkey is -1:
+            if colorkey == -1:
                 colorkey = image.get_at((0, 0))
             image.set_colorkey(colorkey, pg.RLEACCEL)
         return image
@@ -74,7 +82,7 @@ class CountingObject(pg.sprite.Sprite):
     directionX = 1
     directionY = 0
 
-    def __init__(self, initialPos=(200, 200), allowedRoamingSpace=200, maxChangeDirectionRandom=250):
+    def __init__(self, initialPos, maxChangeDirectionRandom=250):
         pg.sprite.Sprite.__init__(self)  # call Sprite initializer
         ramSS = SpriteSheet("assets/ram_walk.png")
         ramSprites = ramSS.load_2dstrip((0, 0, 128, 128), 4, colorkey=(0, 0, 0))
@@ -85,22 +93,27 @@ class CountingObject(pg.sprite.Sprite):
         self.area = screen.get_rect()
         self.rect.topleft = initialPos
         self.initialPos = initialPos
-        self.allowedRoamingSpace = allowedRoamingSpace
         self.maxChangeDirectionRandom = maxChangeDirectionRandom
 
     def update(self):
         self.currentSpriteIndex += 1
 
-        if self.rect.x - self.initialPos[0] > self.allowedRoamingSpace:
+        # Check whether out of bounds
+        # The coordinates refer to the top left corner, so we also need to consider the rest of the sheep
+        if self.rect.x + 0.7 * self.rect.width > rb_topright[0]:
+            # turn left
             self.directionX = -1
             self.directionY = 0
-        if self.initialPos[0] - self.rect.x > self.allowedRoamingSpace:
+        if self.rect.x + 0.2 * self.rect.width < rb_topleft[0]:
+            # turn right
             self.directionX = 1
             self.directionY = 0
-        if self.rect.y - self.initialPos[1] > self.allowedRoamingSpace:
+        if self.rect.y + 0.7 * self.rect.height > rb_botleft[1]:
+            # turn up
             self.directionX = 0
             self.directionY = -1
-        if self.initialPos[1] - self.rect.y > self.allowedRoamingSpace:
+        if self.rect.y + 0.2 * self.rect.height < rb_topleft[1]:
+            # turn down
             self.directionX = 0
             self.directionY = 1
 
@@ -137,8 +150,8 @@ class CountingObject(pg.sprite.Sprite):
 def generateHerd(num):
     herd = []
     for _ in range(num):
-        randX = random.randint(200, 600)
-        randY = random.randint(200, 600)
+        randX = random.randint(rb_topleft[0], rb_topright[0] - 100)
+        randY = random.randint(rb_topleft[1], rb_botleft[1] - 100)
         herd.append(CountingObject(initialPos=(randX,randY)))
     return herd
 

@@ -11,22 +11,13 @@ if not pg.font:
 if not pg.mixer:
     print("Warning, sound disabled")
 
-screen_width = 1000
-screen_height = 700
-
-# Roaming bounds (rb)
-rb_topleft = (0.05 * screen_width, 0.05 * screen_height)
-rb_topright = (0.95 * screen_width, rb_topleft[1])
-rb_botleft = (rb_topleft[0], 0.8 * screen_height)
-rb_botright = (rb_topright[0], rb_botleft[1])
-
 def main():
     """this function is called when the program starts.
     it initializes everything it needs, then runs in
     a loop until the function returns."""
     # Initialize Everything
     pg.init()
-    screen = pg.display.set_mode((screen_width, screen_height), pg.SCALED)
+    screen = pg.display.set_mode((co.screen_width, co.screen_height), pg.SCALED)
     pg.display.set_caption("Counting Simulator")
 
     # Create The Background
@@ -35,7 +26,7 @@ def main():
     background.fill((102, 204, 10))
 
     # Load level and failure sound
-    currentLevel: LevelInterface = SheepLevel("How many objects are there?", 0)
+    currentLevel: LevelInterface = SheepLevel("How many objects are there?", 10)
 
     # Put Text On The Background, Centered
     if not pg.font:
@@ -104,19 +95,19 @@ def main():
         screen.blit(background, (0, 0))
 
         # Draw fence
-        full_fence_height = rb_botleft[1] - rb_topleft[1]
+        full_fence_height = co.rb_botleft[1] - co.rb_topleft[1]
         small_fence_height = vertical_fence.get_height()
         number_of_small_vfences = math.ceil(full_fence_height / small_fence_height)
         for i in range(number_of_small_vfences):
-            screen.blit(vertical_fence,(rb_topleft[0], rb_topleft[1] + small_fence_height * i))
-            screen.blit(vertical_fence,(rb_topright[0], rb_topright[1] + small_fence_height * i))
+            screen.blit(vertical_fence,(co.rb_topleft[0], co.rb_topleft[1] + small_fence_height * i))
+            screen.blit(vertical_fence,(co.rb_topright[0], co.rb_topright[1] + small_fence_height * i))
 
-        full_fence_width = rb_topright[0] - rb_topleft[0]
+        full_fence_width = co.rb_topright[0] - co.rb_topleft[0]
         small_fence_width = horizontal_fence.get_width() + 0.1 * horizontal_fence.get_width()
         number_of_small_hfences = math.ceil(full_fence_width / small_fence_width)
         for i in range(number_of_small_hfences):
-            screen.blit(horizontal_fence,(rb_topleft[0] + small_fence_width * i, rb_topleft[1]))
-            screen.blit(horizontal_fence,(rb_botleft[0] + small_fence_width * i, rb_botleft[1]))
+            screen.blit(horizontal_fence,(co.rb_topleft[0] + small_fence_width * i, co.rb_topleft[1]))
+            screen.blit(horizontal_fence,(co.rb_botleft[0] + small_fence_width * i, co.rb_botleft[1]))
 
         if currentLevel.is_stopped():
             text = font.render("Press enter to reset", True, (10, 10, 10))
@@ -131,7 +122,7 @@ def main():
 
         if not currentLevel.is_stopped():
             textinput.update(events)
-            screen.blit(textinput.surface, (background.get_width() / 2 - 150, rb_botleft[1] + 100), (0,0,300,100))
+            screen.blit(textinput.surface, (background.get_width() / 2 - 150, co.rb_botleft[1] + 100), (0,0,300,100))
 
         timerColor=(0,0,0)
         if timer <= 5:
