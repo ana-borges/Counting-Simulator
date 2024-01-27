@@ -40,8 +40,8 @@ def main():
     pg.display.flip()
 
     # Prepare Game Objects
-    sheep = co.CountingObject()
-    allobjects = pg.sprite.Group(sheep)
+    sheeps = co.generateHerd(10)
+    allobjects = pg.sprite.Group(sheeps)
     allobjects.draw(screen)
     clock = pg.time.Clock()
 
