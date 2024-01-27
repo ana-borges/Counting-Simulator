@@ -1,11 +1,11 @@
-import os
-import pygame as pg
-import counting_objects as co
-import pygame_textinput as ti
-import pygame.camera as ca
 import math
-import reaction
 
+import pygame as pg
+import pygame.camera as ca
+import pygame_textinput as ti
+
+import counting_objects as co
+import reaction
 from level import SheepLevel, LevelInterface
 
 if not pg.font:
@@ -109,7 +109,7 @@ def main():
                         going = False
                     elif event.type == pg.KEYDOWN and event.key == pg.K_RETURN:
                         currentLevel.reset()
-                        sheeps = co.generateHerd(currentLevel.get_amount_of_objects())
+                        sheeps = co.generateHerd(currentLevel.get_amount_of_objects()-1)
                         allobjects = pg.sprite.Group(sheeps)
                         dyingSheep = co.generateHerd(1)
                         dyingSheepObjects = pg.sprite.Group(dyingSheep)
