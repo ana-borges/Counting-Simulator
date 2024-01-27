@@ -48,6 +48,7 @@ def main():
     # Create TextInput-object with at most 15 characters
     manager = ti.TextInputManager(validator=lambda input: len(input) <= 15)
     textinput = ti.TextInputVisualizer(manager)
+    receiveinput = True
 
     # Main Loop
     going = True
@@ -68,6 +69,7 @@ def main():
                 try:
                     uiasint = int(userinput)
                     print(uiasint)
+                    receiveinput = False
                 except ValueError:
                     print("That's not even an integer!")
 
@@ -77,8 +79,9 @@ def main():
         screen.blit(background, (0, 0))
         allobjects.draw(screen)
 
-        textinput.update(events)
-        screen.blit(textinput.surface, (background.get_width() / 2 - 150, background.get_height() - 50), (0,0,300,100))
+        if receiveinput:
+            textinput.update(events)
+            screen.blit(textinput.surface, (background.get_width() / 2 - 150, background.get_height() - 50), (0,0,300,100))
 
         pg.display.flip()
 
