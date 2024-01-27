@@ -26,7 +26,7 @@ def main():
     background.fill((102, 204, 10))
 
     # Load level and failure sound
-    currentLevel: LevelInterface = SheepLevel("How many objects are there?", 10)
+    currentLevel: LevelInterface = SheepLevel("How many objects are there?", 0)
 
     # Put Text On The Background, Centered
     if not pg.font:
@@ -131,17 +131,18 @@ def main():
 
         if not currentLevel.is_stopped():
             textinput.update(events)
-            screen.blit(textinput.surface, (background.get_width() / 2 - 150, co.rb_botleft[1] + 100), (0,0,300,100))
+            screen.blit(textinput.surface, (background.get_width() / 2 - 100, textpos[1] + 50), (0,0,300,100))
 
         if currentLevel.is_stopped() and errorScreenTimer <= 3*fps:
             screen.blit(errorScreen,(0,0))
             errorScreenTimer += 1
 
+        # Timer
         timerColor=(0,0,0)
         if timer <= 5:
             timerColor=(255,0,0)
         text = font.render(str(timer), True, timerColor)
-        textpos = text.get_rect(centerx=background.get_width() - 100, y=50)
+        textpos = text.get_rect(centerx=co.rb_topright[0], y=co.rb_topright[1] - 50)
         screen.blit(text, textpos)
 
         pg.display.flip()
