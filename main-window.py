@@ -2,6 +2,7 @@ import os
 import pygame as pg
 import counting_objects as co
 import pygame_textinput as ti
+import math
 
 from level import SheepLevel, LevelInterface
 
@@ -10,13 +11,22 @@ if not pg.font:
 if not pg.mixer:
     print("Warning, sound disabled")
 
+screen_width = 1000
+screen_height = 700
+
+# Roaming bounds (rb)
+rb_topleft = (0.05 * screen_width, 0.05 * screen_height)
+rb_topright = (0.95 * screen_width, rb_topleft[1])
+rb_botleft = (rb_topleft[0], 0.8 * screen_height)
+rb_botright = (rb_topright[0], rb_botleft[1])
+
 def main():
     """this function is called when the program starts.
     it initializes everything it needs, then runs in
     a loop until the function returns."""
     # Initialize Everything
     pg.init()
-    screen = pg.display.set_mode((1000, 1000), pg.SCALED)
+    screen = pg.display.set_mode((screen_width, screen_height), pg.SCALED)
     pg.display.set_caption("Counting Simulator")
 
     # Create The Background
@@ -37,10 +47,13 @@ def main():
     screen.blit(background, (0, 0))
     pg.display.flip()
 
+    # Get the fence
+    vertical_fence, vertical_fence_rect = co.load_image("vertical_fence.png",-1,2)
+    horizontal_fence, horizontal_fence_rect = co.load_image("horizontal_fence.png",-1,2)
+
     # Prepare Game Objects
     sheeps = co.generateHerd(currentLevel.get_amount_of_objects())
     allobjects = pg.sprite.Group(sheeps)
-    allobjects.draw(screen)
     clock = pg.time.Clock()
 
     # Create TextInput-object with at most 15 characters
@@ -87,8 +100,24 @@ def main():
 
         allobjects.update()
 
-        # Draw Everything
+        # Draw background
         screen.blit(background, (0, 0))
+
+        # Draw fence
+        full_fence_height = rb_botleft[1] - rb_topleft[1]
+        small_fence_height = vertical_fence.get_height()
+        number_of_small_vfences = math.ceil(full_fence_height / small_fence_height)
+        for i in range(number_of_small_vfences):
+            screen.blit(vertical_fence,(rb_topleft[0], rb_topleft[1] + small_fence_height * i))
+            screen.blit(vertical_fence,(rb_topright[0], rb_topright[1] + small_fence_height * i))
+
+        full_fence_width = rb_topright[0] - rb_topleft[0]
+        small_fence_width = horizontal_fence.get_width() + 0.1 * horizontal_fence.get_width()
+        number_of_small_hfences = math.ceil(full_fence_width / small_fence_width)
+        for i in range(number_of_small_hfences):
+            screen.blit(horizontal_fence,(rb_topleft[0] + small_fence_width * i, rb_topleft[1]))
+            screen.blit(horizontal_fence,(rb_botleft[0] + small_fence_width * i, rb_botleft[1]))
+
         if currentLevel.is_stopped():
             text = font.render("Press enter to reset", True, (10, 10, 10))
             textpos = text.get_rect(centerx=background.get_width() / 2, y=background.get_height() / 2)
@@ -102,7 +131,7 @@ def main():
 
         if not currentLevel.is_stopped():
             textinput.update(events)
-            screen.blit(textinput.surface, (background.get_width() / 2 - 150, background.get_height() - 50), (0,0,300,100))
+            screen.blit(textinput.surface, (background.get_width() / 2 - 150, rb_botleft[1] + 100), (0,0,300,100))
 
         timerColor=(0,0,0)
         if timer <= 5:
