@@ -25,16 +25,13 @@ def main():
     background.fill((102, 204, 10))
 
     # Load level and failure sound
-    currentLevel: LevelInterface = SheepLevel("How many objects are there?", 0, initial_timer=10)
+    currentLevel: LevelInterface = SheepLevel("How many objects are there?", 0)
 
     # Put Text On The Background, Centered
     if not pg.font:
         return 1
 
     font = pg.font.Font(None, 64)
-    text = font.render("How many objects are there?", True, (0, 0, 0))
-    textpos = text.get_rect(centerx=background.get_width() / 2, y=background.get_height() - 100)
-    background.blit(text, textpos)
 
     # Display The Background
     screen.blit(background, (0, 0))
@@ -58,29 +55,54 @@ def main():
     timer = 0
     while going:
         clock.tick(60)
-        if not currentLevel.is_stopped():
+        events = pg.event.get()
+        if currentLevel.is_stopped():
+            # Handle Input Events
+            for event in events:
+                if event.type == pg.QUIT:
+                    going = False
+                elif event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
+                    # Close window if user presses ESC
+                    going = False
+                elif event.type == pg.KEYDOWN and event.key == pg.K_RETURN:
+                    currentLevel.reset()
+                    sheeps = co.generateHerd(currentLevel.get_amount_of_objects())
+                    allobjects = pg.sprite.Group(sheeps)
+                    textinput.value = ""
+                    textinput.cursor_pos = 0
+        else:
             timer = currentLevel.check_time_left()
 
-        events = pg.event.get()
-
-        # Handle Input Events
-        for event in events:
-            if event.type == pg.QUIT:
-                going = False
-            elif event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
-                # Close window if user presses ESC
-                going = False
-            elif event.type == pg.KEYDOWN and event.key == pg.K_RETURN:
-                allobjects = currentLevel.register_answer(textinput.value, allobjects)
-                textinput.value = ""
-                textinput.cursor_pos = 0
+            # Handle Input Events
+            for event in events:
+                if event.type == pg.QUIT:
+                    going = False
+                elif event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
+                    # Close window if user presses ESC
+                    going = False
+                elif event.type == pg.KEYDOWN and event.key == pg.K_RETURN:
+                    allobjects = currentLevel.register_answer(textinput.value, allobjects)
+                    textinput.value = ""
+                    textinput.cursor_pos = 0
 
         allobjects.update()
 
         # Draw Everything
         screen.blit(background, (0, 0))
+        if currentLevel.is_stopped():
+            text = font.render("Press enter to reset", True, (10, 10, 10))
+            textpos = text.get_rect(centerx=background.get_width() / 2, y=background.get_height() / 2)
+            screen.blit(text, textpos)
+        else:
+            text = font.render(currentLevel.get_question(), True, (10, 10, 10))
+            textpos = text.get_rect(centerx=background.get_width() / 2, y=background.get_height() - 100)
+            screen.blit(text, textpos)
+
         allobjects.draw(screen)
 
+        if not currentLevel.is_stopped():
+            textinput.update(events)
+            screen.blit(textinput.surface, (background.get_width() / 2 - 150, background.get_height() - 50), (0,0,300,100))
 
         timerColor=(0,0,0)
         if timer <= 5:
@@ -88,9 +110,6 @@ def main():
         text = font.render(str(timer), True, timerColor)
         textpos = text.get_rect(centerx=background.get_width() - 100, y=50)
         screen.blit(text, textpos)
-
-        textinput.update(events)
-        screen.blit(textinput.surface, (background.get_width() / 2 - 150, background.get_height() - 50), (0,0,300,100))
 
         pg.display.flip()
 

@@ -36,15 +36,22 @@ class LevelInterface:
     def is_stopped(self) -> bool:
         pass
 
+    def get_question(self) -> str:
+        pass
+
+    def reset(self):
+        pass
+
 
 class SheepLevel(LevelInterface):
-    def __init__(self, question: str, difficulty: int, initial_timer: int = 5):
+    def __init__(self, question: str, difficulty: int):
         self._startLevelTime: int = -1
         self._stopLevelTime: int = -1
         self.answer: str = ""
         self.question = question
+        self.difficulty = difficulty
         self._amountOfObjects = random.randint(difficulty * 10 + 5, difficulty * 20 + 10)
-        self._initialTimer = initial_timer
+        self._initialTimer = 10
 
     def start(self):
         self._startLevelTime = int(time.time())
@@ -95,5 +102,12 @@ class SheepLevel(LevelInterface):
     def is_stopped(self) -> bool:
         return self._stopLevelTime != -1
 
+    def get_question(self) -> str:
+        return self.question
 
-level: LevelInterface = SheepLevel("", 1)
+    def reset(self):
+        self._startLevelTime: int = -1
+        self._stopLevelTime: int = -1
+        self.answer: str = ""
+        self._amountOfObjects = random.randint(self.difficulty * 10 + 5, self.difficulty * 20 + 10)
+        self.start()
