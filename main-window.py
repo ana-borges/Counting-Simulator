@@ -100,6 +100,7 @@ def main():
                     textinput.value = ""
                     textinput.cursor_pos = 0
                     errorScreenTimer = 0
+                    reaction.deadSheep = False
         else:
             timer = currentLevel.check_time_left()
 

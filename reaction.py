@@ -53,6 +53,10 @@ class Correct(ReactionInterface):
 class CorrectPicture(ReactionInterface):
     def __init__(self, all_objects: pg.sprite.Group):
         self._soundFile: str = random.choice(["sounds/PICTURE_QUESTION.wav"])
+        self._failureSound = pg.mixer.Sound(self._soundFile)
+        self._allObjects = all_objects
+        return
+
     def execute(self) -> pg.sprite.Group:
         pg.mixer.Sound.play(self._failureSound)
         return self._allObjects
