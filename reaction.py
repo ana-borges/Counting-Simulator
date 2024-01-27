@@ -41,7 +41,7 @@ class Timout(ReactionInterface):
 
 class Correct(ReactionInterface):
     def __init__(self, all_objects: pg.sprite.Group):
-        self._soundFile: str = random.choice(["sounds/YOUR_MUM_IS_SO_SLOW.wav"])
+        self._soundFile: str = random.choice(["sounds/SO_CLOSE.wav"])
         self._failureSound = pg.mixer.Sound(self._soundFile)
         self._allObjects = all_objects
         return
