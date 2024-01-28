@@ -1,4 +1,4 @@
-# 3, 2, 5 Can you Count?
+# 3, 2, 5... Can you count?
 
 A game in which you need to count how many goats are on the screen! It's harder than it sounds ;)
 
@@ -21,4 +21,11 @@ pyinstaller --onefile \
     --add-data assets:assets \
     --add-data sounds:sounds \
     main-window.py
+cp -r assets dist/
+cp -r sounds dist/
+```
+
+It can be bundled for transport as follows:
+```
+tar -zcvf 3_2_5_can_you_count.tar.gz dist/
 ```
