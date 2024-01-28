@@ -200,7 +200,10 @@ def main():
         timerColor=(0,0,0)
         if timer <= 5:
             timerColor=(255,0,0)
-        text = font.render(str(timer), True, timerColor)
+        timer_str = str(timer)
+        if currentLevel.number_correct > 4:
+            timer_str = str(bin(timer)[2:])
+        text = font.render(timer_str, True, timerColor)
         textpos = text.get_rect(centerx=co.rb_topright[0], y=co.rb_topright[1] - 50)
         screen.blit(text, textpos)
 

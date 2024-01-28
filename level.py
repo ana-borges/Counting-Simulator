@@ -51,6 +51,7 @@ class SheepLevel(LevelInterface):
         self.difficulty = difficulty
         self._amountOfObjects = random.randint(difficulty * 10 + 5, difficulty * 20 + 10)
         self._initialTimer = 10
+        self.number_correct = 0
 
     def start(self):
         self._startLevelTime = int(time.time())
@@ -93,6 +94,7 @@ class SheepLevel(LevelInterface):
         return
 
     def __on_correct_answer(self, all_objects: pg.sprite.Group) -> pg.sprite.Group:
+        self.number_correct += 1
         return random.choice([Correct(all_objects),CorrectPicture(all_objects), DeadSheep(all_objects)]).execute()
 
     def get_amount_of_objects(self) -> int:
@@ -103,6 +105,9 @@ class SheepLevel(LevelInterface):
 
     def get_question(self) -> str:
         return self.question
+    
+    def get_number_correct(self) -> int:
+        return self.number_correct
 
     def reset(self):
         self._startLevelTime: int = -1
