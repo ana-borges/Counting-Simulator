@@ -2,7 +2,7 @@ import random
 import time
 import pygame as pg
 
-from reaction import WrongNumber, NoNumber, Timout, Correct, CorrectPicture, DeadSheep, Winning
+from reaction import WrongNumber, NoNumber, Timout, Correct, CorrectPicture, DeadSheep, Winning, LevelProgression
 
 
 class LevelInterface:
@@ -45,6 +45,12 @@ class LevelInterface:
     def __on_winning(self):
         pass
 
+    def __check_for_level_progression(self) -> bool:
+        pass
+
+    def __on_level_progression(self):
+        pass
+
 
 class SheepLevel(LevelInterface):
     def __init__(self, question: str, difficulty: int):
@@ -56,6 +62,7 @@ class SheepLevel(LevelInterface):
         self._amountOfObjects = random.randint(difficulty * 10 + 5, difficulty * 20 + 10)
         self._initialTimer = 10
         self.number_correct = 0
+        self.number_incorrect = 0
 
     def start(self):
         self._startLevelTime = int(time.time())
@@ -89,20 +96,32 @@ class SheepLevel(LevelInterface):
             return all_objects
 
     def __on_wrong_number(self):
-        WrongNumber().execute()
+        self.number_incorrect += 1
+        if self.__check_for_level_progression():
+            self.__on_level_progression()
+        else:
+            WrongNumber().execute()
         return
 
     def __on_no_number(self):
-        NoNumber().execute()
+        self.number_incorrect += 1
+        if self.__check_for_level_progression():
+            self.__on_level_progression()
+        else:
+            NoNumber().execute()
         return
 
     def __on_timeout(self):
-        Timout().execute()
+        self.number_incorrect += 1
+        if self.__check_for_level_progression():
+            self.__on_level_progression()
+        else:
+            Timout().execute()
         return
 
     def __on_correct_answer(self, all_objects: pg.sprite.Group) -> pg.sprite.Group:
         self.number_correct += 1
-        return random.choice([Correct(all_objects),CorrectPicture(all_objects), DeadSheep(all_objects)]).execute()
+        return random.choice([Correct(all_objects), CorrectPicture(all_objects), DeadSheep(all_objects)]).execute()
 
     def get_amount_of_objects(self) -> int:
         return self._amountOfObjects
@@ -125,4 +144,18 @@ class SheepLevel(LevelInterface):
 
     def __on_winning(self):
         Winning().execute()
+        return
+
+    def __check_for_level_progression(self) -> bool:
+        return self.number_incorrect != 0 and self.number_incorrect % 5 == 0
+
+    def __on_level_progression(self):
+        next_level = int(self.number_incorrect/5) % 3
+        if next_level == 1:
+            self.difficulty = 0
+        elif next_level == 2:
+            self.difficulty = 10
+        elif next_level == 0:
+            self.difficulty = 1
+        LevelProgression(next_level).execute()
         return

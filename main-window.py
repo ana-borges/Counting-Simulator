@@ -29,7 +29,7 @@ def main():
     background.fill((102, 204, 10))
 
     # Load level and failure sound
-    currentLevel: LevelInterface = SheepLevel("How many sheep are there?", 0)
+    currentLevel: LevelInterface = SheepLevel("How many sheep are there?", 1)
 
     # Put Text On The Background, Centered
     if not pg.font:

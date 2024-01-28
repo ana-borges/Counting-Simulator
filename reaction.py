@@ -89,3 +89,13 @@ class Winning(ReactionInterface):
         win = True
         pg.mixer.Sound.play(pg.mixer.Sound("sounds/WIN.wav"))
         return
+
+
+class LevelProgression(ReactionInterface):
+    def __init__(self, version: int):
+        self._failureSound = pg.mixer.Sound("sounds/LEVEL_PROGRESSION_" + str(version) + ".wav")
+        return
+
+    def execute(self):
+        pg.mixer.Sound.play(self._failureSound)
+        return
