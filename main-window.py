@@ -35,7 +35,7 @@ def main():
     if not pg.font:
         return 1
 
-    font = pg.font.Font(None, 64)
+    font = pg.font.Font("assets/Minecraft.ttf", 50)
 
     # Display The Background
     screen.blit(background, (0, 0))
@@ -70,7 +70,7 @@ def main():
 
     # Create TextInput-object with at most 15 characters
     manager = ti.TextInputManager(validator=lambda input: len(input) <= 15)
-    textinput = ti.TextInputVisualizer(manager)
+    textinput = ti.TextInputVisualizer(manager, font_object=font)
 
     # Start the timer of the level
     currentLevel.start()
