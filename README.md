@@ -20,4 +20,11 @@ pyinstaller --onefile \
     --add-data assets:assets \
     --add-data sounds:sounds \
     main-window.py
+
+# Second way
+pyinstaller --onefile main.py --name 3_2_5-can-you-count
+cp -R assets/ dist/assets/
+cp -R sounds/ dist/sounds/
+mv dist 3_2_5_can_you_count
+tar -zcvf 3_2_5_can_you_count.tar.gz 3_2_5_can_you_count/
 ```
