@@ -6,7 +6,7 @@ than it sounds ;)
 ## Credits
 
 This game was created as part of the [Global Game Jam 2024][GGJ] using
-[pygame][pygame] and is licensed under [CC BY-NC-SA 4.0][CC BY-NC-SA].
+[pygame][pygame] and is licensed under [CC BY-NC-SA 4.0][CC-BY-NC-SA].
 
 ### Authors
 
@@ -63,5 +63,5 @@ tar -zcvf 3_2_5_can_you_count.tar.gz dist/
 [goats]: https://opengameart.org/content/mountain-goat-sprites
 [font]: https://www.dafont.com/minecraft.font
 [CC-BY]: https://creativecommons.org/licenses/by/4.0/
-[BY-NC-SA]: https://creativecommons.org/licenses/by-nc-sa/4.0/
+[CC-BY-NC-SA]: https://creativecommons.org/licenses/by-nc-sa/4.0/
 [GGJ]: https://globalgamejam.org/games/2024/3-2-5-can-you-count-2
