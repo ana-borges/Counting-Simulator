@@ -2,7 +2,8 @@ import random
 import time
 import pygame as pg
 
-from reaction import WrongNumber, NoNumber, Timout, Correct, CorrectPicture, DeadSheep
+from reaction import WrongNumber, NoNumber, Timout, Correct, CorrectPicture, DeadSheep, Winning
+
 
 class LevelInterface:
     def start(self):
@@ -41,6 +42,9 @@ class LevelInterface:
     def reset(self):
         pass
 
+    def __on_winning(self):
+        pass
+
 
 class SheepLevel(LevelInterface):
     def __init__(self, question: str, difficulty: int):
@@ -75,6 +79,9 @@ class SheepLevel(LevelInterface):
         if not answer.isdigit():
             self.__on_no_number()
             return all_objects
+        elif f'{int(self._amountOfObjects):0b}' == answer:
+            self.__on_winning()
+            return all_objects
         elif int(answer) == self._amountOfObjects:
             return self.__on_correct_answer(all_objects)
         else:
@@ -105,7 +112,7 @@ class SheepLevel(LevelInterface):
 
     def get_question(self) -> str:
         return self.question
-    
+
     def get_number_correct(self) -> int:
         return self.number_correct
 
@@ -115,3 +122,7 @@ class SheepLevel(LevelInterface):
         self.answer: str = ""
         self._amountOfObjects = random.randint(self.difficulty * 10 + 5, self.difficulty * 20 + 10)
         self.start()
+
+    def __on_winning(self):
+        Winning().execute()
+        return

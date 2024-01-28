@@ -24,7 +24,6 @@ def main():
     if camlist:
         cam = ca.Camera(camlist[0], (1920, 1080), "RGB")
     cam.start()
-    print(cam.get_size())
     screen = pg.display.set_mode((co.screen_width, co.screen_height), pg.SCALED)
     pg.display.set_caption("Counting Simulator")
 
@@ -85,7 +84,18 @@ def main():
     while going:
         clock.tick(fps)
         events = pg.event.get()
-        if currentLevel.is_stopped():
+        if reaction.win:
+            if pg.mixer.get_busy():
+                continue
+            for event in events:
+                if event.type == pg.QUIT:
+                    going = False
+                elif event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
+                    # Close window if user presses ESC
+                    going = False
+            allobjects.update(True, None)
+            dyingSheepObjects.update(True, None)
+        elif currentLevel.is_stopped():
             if reaction.ask_picture_question:
                 if pg.mixer.get_busy():
                     continue
@@ -141,7 +151,7 @@ def main():
                     textinput.value = ""
                     textinput.cursor_pos = 0
 
-        if not reaction.ask_picture_question and not show_picture:
+        if not reaction.ask_picture_question and not show_picture and not reaction.win:
             allobjects.update()
             dyingSheepObjects.update(currentLevel.is_stopped() and reaction.deadSheep, None)
 
@@ -173,26 +183,27 @@ def main():
         else:
             screen.blit(snapshot, (-500, -200))
 
-        if currentLevel.is_stopped() and not reaction.ask_picture_question:
+
+        if currentLevel.is_stopped() and not reaction.ask_picture_question and not reaction.win:
             text = font.render("Press enter to reset", True, (10, 10, 10))
             textpos = text.get_rect(centerx=background.get_width() / 2, y=background.get_height() / 2)
             screen.blit(text, textpos)
-        elif reaction.ask_picture_question:
+        elif reaction.ask_picture_question and not reaction.win:
             text = font.render("Press 'y' to take a picture or 'n' if not.", True, (10, 10, 10))
             textpos = text.get_rect(centerx=background.get_width() / 2, y=background.get_height() / 2)
             screen.blit(text, textpos)
-        elif not currentLevel.is_stopped():
+        elif not currentLevel.is_stopped() and not reaction.win:
             text = font.render(currentLevel.get_question(), True, (10, 10, 10))
             textpos = text.get_rect(centerx=background.get_width() / 2, y=background.get_height() - 100)
             screen.blit(text, textpos)
 
         
 
-        if not currentLevel.is_stopped():
+        if not currentLevel.is_stopped() and not reaction.win:
             textinput.update(events)
             screen.blit(textinput.surface, (background.get_width() / 2 - 100, textpos[1] + 50), (0,0,300,100))
 
-        if currentLevel.is_stopped() and errorScreenTimer <= 3*fps and not reaction.ask_picture_question and not show_picture:
+        if currentLevel.is_stopped() and errorScreenTimer <= 3*fps and not reaction.ask_picture_question and not show_picture and not reaction.win:
             screen.blit(errorScreen,(0,0))
             errorScreenTimer += 1
 
