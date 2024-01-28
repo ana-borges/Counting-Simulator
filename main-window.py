@@ -36,7 +36,7 @@ def main():
     snapshot = pg.surface.Surface((1920, 1080), 0, screen)
 
     # Load level and failure sound
-    currentLevel: LevelInterface = SheepLevel("How many objects are there?", 0)
+    currentLevel: LevelInterface = SheepLevel("How many sheep are there?", 0)
 
     # Put Text On The Background, Centered
     if not pg.font:
