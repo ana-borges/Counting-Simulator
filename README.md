@@ -1,8 +1,8 @@
-# 325: Can you Count?
+# 3, 2, 5 Can you Count?
 
-A game in which you need to count how many objects are on the screen! It's harder than it sounds ;)
+A game in which you need to count how many goats are on the screen! It's harder than it sounds ;)
 
-## Assests
+## Assets
 
 Goats: https://opengameart.org/content/mountain-goat-sprites
 
