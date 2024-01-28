@@ -8,11 +8,20 @@ Goats: https://opengameart.org/content/mountain-goat-sprites
 
 Font: https://www.dafont.com/minecraft.font
 
-## Generate executable
+## Run and generate executable
 
-Requirements:
+### Requirements
+
 - Repository is cloned
 - A python environment with the packages listed in `requirements.txt`
+
+### Run
+
+```
+python3 main-window.py
+```
+
+### Generate executable
 
 Running the following will generate an executable in `dist`:
 ```
@@ -25,7 +34,13 @@ cp -r assets dist/
 cp -r sounds dist/
 ```
 
-It can be bundled for transport as follows:
+The executable can be bundled for transport as follows:
 ```
 tar -zcvf 3_2_5_can_you_count.tar.gz dist/
 ```
+
+### Run from executable
+
+1. Make sure you are in the same directory as the executable
+
+2. Run it as usual for your OS
