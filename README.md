@@ -2,6 +2,11 @@
 
 A game in which you need to count how many objects are on the screen! It's harder than it sounds ;)
 
+## Assests
+
+Goat - https://opengameart.org/content/mountain-goat-sprites
+Font - https://www.dafont.com/minecraft.font
+
 ## Generate executable
 
 Requirements:

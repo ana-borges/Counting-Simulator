@@ -35,7 +35,7 @@ def main():
     if not pg.font:
         return 1
 
-    font = pg.font.Font("assets/Minecraft.ttf", 50)
+    font = pg.font.Font("assets/Minecraft.ttf", 48)
 
     # Display The Background
     screen.blit(background, (0, 0))
@@ -51,6 +51,9 @@ def main():
 
     # Get X
     errorScreen, errorScreenRect = co.load_image("x.png",-1,8)
+    
+    # Get banner
+    banner, errorScreenRect = co.load_image("banner.png",(0,0,0),1)
 
     # Get fake images
     female_goat, female_goat_rect = co.load_image("dall-schaf-white-f.png", -1, 4)
@@ -217,6 +220,12 @@ def main():
             timer_str = str(bin(timer)[2:])
         text = font.render(timer_str, True, timerColor)
         textpos = text.get_rect(centerx=co.rb_topright[0], y=co.rb_topright[1] - 50)
+        screen.blit(text, textpos)
+
+
+        screen.blit(banner,((co.screen_width-600)/2,0))
+        text = font.render("3, 2, 5 Can you count?", True, (0, 0, 0))
+        textpos = text.get_rect(x=(co.screen_width-600)/2 + 30, y=1)
         screen.blit(text, textpos)
 
         pg.display.flip()
