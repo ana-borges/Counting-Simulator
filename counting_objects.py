@@ -52,7 +52,7 @@ class SpriteSheet:
     def load_2dstrip(self, rect, image_count, colorkey=None):
         """Load a whole strip of images, and return them as a list."""
         tupsUp = [
-            (rect[0] + rect[2] * x, rect[1], rect[2], rect[3])
+            (rect[0] + rect[2] * x, rect[1] + rect[3] * 3, rect[2], rect[3])
             for x in range(image_count)
         ]
         tupsLeft = [
@@ -60,11 +60,11 @@ class SpriteSheet:
             for x in range(image_count)
         ]
         tupsDown = [
-            (rect[0] + rect[2] * x, rect[1] + rect[3] * 2, rect[2], rect[3])
+            (rect[0] + rect[2] * x, rect[1] + rect[3] * 0, rect[2], rect[3])
             for x in range(image_count)
         ]
         tupsRight = [
-            (rect[0] + rect[2] * x, rect[1] + rect[3] * 3, rect[2], rect[3])
+            (rect[0] + rect[2] * x, rect[1] + rect[3] * 2, rect[2], rect[3])
             for x in range(image_count)
         ]
 
@@ -87,8 +87,8 @@ class CountingObject(pg.sprite.Sprite):
 
     def __init__(self, initialPos, maxChangeDirectionRandom=250):
         pg.sprite.Sprite.__init__(self)  # call Sprite initializer
-        ramSS = SpriteSheet("assets/ram_walk.png")
-        ramSprites = ramSS.load_2dstrip((0, 0, 128, 128), 4, colorkey=(0, 0, 0))
+        ramSS = SpriteSheet("assets/goat_walk.png")
+        ramSprites = ramSS.load_2dstrip((0, 0, 63, 63), 4, colorkey=(0, 0, 0))
         self.ramSprites = ramSprites
         self.image = ramSprites["right"][0]
         self.rect = ramSprites["right"][0].get_rect()
@@ -141,7 +141,7 @@ class CountingObject(pg.sprite.Sprite):
             self.directionX = 1
             self.directionY = 0
 
-        self.image = self.ramSprites[self.getDirection()][int(self.currentSpriteIndex / 4) % 4]
+        self.image = self.ramSprites[self.getDirection()][int(self.currentSpriteIndex / 8) % 4]
         self.rect.x += 1 * self.directionX
         self.rect.y += 1 * self.directionY
 
