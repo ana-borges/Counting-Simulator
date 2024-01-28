@@ -4,8 +4,9 @@ A game in which you need to count how many objects are on the screen! It's harde
 
 ## Assests
 
-Goat - https://opengameart.org/content/mountain-goat-sprites
-Font - https://www.dafont.com/minecraft.font
+Goats: https://opengameart.org/content/mountain-goat-sprites
+
+Font: https://www.dafont.com/minecraft.font
 
 ## Generate executable
 
@@ -20,8 +21,4 @@ pyinstaller --onefile \
     --add-data assets:assets \
     --add-data sounds:sounds \
     main-window.py
-
-# Second way
-pyinstaller --onefile main-window.py
-tar -zcvf 3_2_5_can_you_count.tar.gz dist/
 ```
