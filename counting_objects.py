@@ -110,19 +110,19 @@ class CountingObject(pg.sprite.Sprite):
 
         # Check whether out of bounds
         # The coordinates refer to the top left corner, so we also need to consider the rest of the sheep
-        if self.rect.x + 0.7 * self.rect.width > rb_topright[0]:
+        if self.rect.x + self.rect.width > rb_topright[0]:
             # turn left
             self.directionX = -1
             self.directionY = 0
-        if self.rect.x + 0.2 * self.rect.width < rb_topleft[0]:
+        if self.rect.x < rb_topleft[0]:
             # turn right
             self.directionX = 1
             self.directionY = 0
-        if self.rect.y + 0.7 * self.rect.height > rb_botleft[1]:
+        if self.rect.y + self.rect.height > rb_botleft[1]:
             # turn up
             self.directionX = 0
             self.directionY = -1
-        if self.rect.y + 0.2 * self.rect.height < rb_topleft[1]:
+        if self.rect.y < rb_topleft[1]:
             # turn down
             self.directionX = 0
             self.directionY = 1
