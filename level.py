@@ -2,7 +2,7 @@ import random
 import time
 import pygame as pg
 
-from reaction import WrongNumber, NoNumber, Timout, Correct, CorrectPicture, DeadSheep, Winning, LevelProgression
+from reaction import WrongNumber, NoNumber, Timeout, Correct, CorrectPicture, DeadSheep, Winning, LevelProgression
 
 
 class LevelInterface:
@@ -116,7 +116,7 @@ class GoatLevel(LevelInterface):
         if self.__check_for_level_progression():
             self.__on_level_progression()
         else:
-            Timout().execute()
+            Timeout().execute()
         return
 
     def __on_correct_answer(self, all_objects: pg.sprite.Group) -> pg.sprite.Group:
