@@ -52,7 +52,7 @@ class LevelInterface:
         pass
 
 
-class SheepLevel(LevelInterface):
+class GoatLevel(LevelInterface):
     def __init__(self, question: str, difficulty: int):
         self._startLevelTime: int = -1
         self._stopLevelTime: int = -1

@@ -6,7 +6,7 @@ import pygame_textinput as ti
 
 import counting_objects as co
 import reaction
-from level import SheepLevel, LevelInterface
+from level import GoatLevel, LevelInterface
 
 if not pg.font:
     print("Warning, fonts disabled")
@@ -29,7 +29,7 @@ def main():
     background.fill((102, 204, 10))
 
     # Load level and failure sound
-    currentLevel: LevelInterface = SheepLevel("How many sheep are there?", 1)
+    currentLevel: LevelInterface = GoatLevel("How many goats are there?", 1)
 
     # Put Text On The Background, Centered
     if not pg.font:
