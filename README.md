@@ -1,12 +1,26 @@
-# 3, 2, 5... Can you count?
+# 3, 2, 5 Can you count?
 
-A game in which you need to count how many goats are on the screen! It's harder than it sounds ;)
+A game in which you need to count how many goats are on the screen! It's harder
+than it sounds ;)
 
-## Assets
+## Credits
 
-Goats: https://opengameart.org/content/mountain-goat-sprites
+This game was created as part of the [Global Game Jam 2024][GGJ] using
+[pygame][pygame] and is licensed under [CC BY-NC-SA 4.0][CC BY-NC-SA].
 
-Font: https://www.dafont.com/minecraft.font
+### Authors
+
+- Ana Borges
+- Nils Roth
+- Jorge Simões
+
+### Assets
+
+The goat assets were created by [Sevarihk][goats] and are distributed under
+[CC-BY 4.0][CC-BY].
+
+The font is the [Minecraft Font by Craftron Gaming][font].
+
 
 ## Run and generate executable
 
@@ -44,3 +58,10 @@ tar -zcvf 3_2_5_can_you_count.tar.gz dist/
 1. Make sure you are in the same directory as the executable
 
 2. Run it as usual for your OS
+
+[pygame]: https://www.pygame.org/
+[goats]: https://opengameart.org/content/mountain-goat-sprites
+[font]: https://www.dafont.com/minecraft.font
+[CC-BY]: https://creativecommons.org/licenses/by/4.0/
+[BY-NC-SA]: https://creativecommons.org/licenses/by-nc-sa/4.0/
+[GGJ]: https://globalgamejam.org/games/2024/3-2-5-can-you-count-2
