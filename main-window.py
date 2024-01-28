@@ -1,7 +1,7 @@
 import math
+import random
 
 import pygame as pg
-import pygame.camera as ca
 import pygame_textinput as ti
 
 import counting_objects as co
@@ -19,11 +19,7 @@ def main():
     a loop until the function returns."""
     # Initialize Everything
     pg.init()
-    ca.init()
-    camlist = ca.list_cameras()
-    if camlist:
-        cam = ca.Camera(camlist[0], (1920, 1080), "RGB")
-    cam.start()
+
     screen = pg.display.set_mode((co.screen_width, co.screen_height), pg.SCALED)
     pg.display.set_caption("Counting Simulator")
 
@@ -31,8 +27,6 @@ def main():
     background = pg.Surface(screen.get_size())
     background = background.convert()
     background.fill((102, 204, 10))
-
-    snapshot = pg.surface.Surface((1920, 1080), 0, screen)
 
     # Load level and failure sound
     currentLevel: LevelInterface = SheepLevel("How many sheep are there?", 0)
@@ -57,6 +51,13 @@ def main():
 
     # Get X
     errorScreen, errorScreenRect = co.load_image("x.png",-1,8)
+
+    # Get fake images
+    female_goat, female_goat_rect = co.load_image("dall-schaf-white-f.png", -1, 4)
+    male_goat, male_goat_rect = co.load_image("dall-schaf-white-m.png", -1, 4)
+    goat = random.choice([female_goat, male_goat])
+    goat_dest = (300, 200)
+
 
     # Prepare Game Objects
     sheeps = co.generateHerd(currentLevel.get_amount_of_objects() - 1)
@@ -106,10 +107,12 @@ def main():
                         # Close window if user presses ESC
                         going = False
                     elif event.type == pg.KEYDOWN and event.key == pg.K_y:
+                        # Make a new sheep appear from behind the tree
+                        tree_sheep = co.CountingObject(initialPos=tree_pos)
+                        allobjects.add(tree_sheep)
                         pg.mixer.Sound.play(pg.mixer.Sound("sounds/YES_PICTURE.wav"))
                         reaction.ask_picture_question = False
-                        snapshot = cam.get_image(snapshot)
-                        screen.blit(snapshot, (-500, -200))
+                        screen.blit(goat, goat_dest)
                         show_picture = True
                     elif event.type == pg.KEYDOWN and event.key == pg.K_n:
                         # Make a new sheep appear from behind the tree
@@ -151,38 +154,36 @@ def main():
                     textinput.value = ""
                     textinput.cursor_pos = 0
 
-        if not reaction.ask_picture_question and not show_picture and not reaction.win:
+        if not reaction.ask_picture_question and not reaction.win:
             allobjects.update()
             dyingSheepObjects.update(currentLevel.is_stopped() and reaction.deadSheep, None)
 
 
-        if not show_picture:
-            # Draw background
-            screen.blit(background, (0, 0))
+        # Draw background
+        screen.blit(background, (0, 0))
 
-            # Draw fence
-            full_fence_height = co.rb_botleft[1] - co.rb_topleft[1]
-            small_fence_height = vertical_fence.get_height()
-            number_of_small_vfences = math.ceil(full_fence_height / small_fence_height)
-            for i in range(number_of_small_vfences):
-                screen.blit(vertical_fence,(co.rb_topleft[0], co.rb_topleft[1] + small_fence_height * i))
-                screen.blit(vertical_fence,(co.rb_topright[0], co.rb_topright[1] + small_fence_height * i))
+        # Draw fence
+        full_fence_height = co.rb_botleft[1] - co.rb_topleft[1]
+        small_fence_height = vertical_fence.get_height()
+        number_of_small_vfences = math.ceil(full_fence_height / small_fence_height)
+        for i in range(number_of_small_vfences):
+            screen.blit(vertical_fence,(co.rb_topleft[0], co.rb_topleft[1] + small_fence_height * i))
+            screen.blit(vertical_fence,(co.rb_topright[0], co.rb_topright[1] + small_fence_height * i))
 
-            full_fence_width = co.rb_topright[0] - co.rb_topleft[0]
-            small_fence_width = horizontal_fence.get_width() + 5
-            number_of_small_hfences = math.ceil(full_fence_width / small_fence_width)
-            for i in range(number_of_small_hfences):
-                screen.blit(horizontal_fence,(co.rb_topleft[0] + small_fence_width * i, co.rb_topleft[1]))
-                screen.blit(horizontal_fence,(co.rb_botleft[0] + small_fence_width * i, co.rb_botleft[1]))
+        full_fence_width = co.rb_topright[0] - co.rb_topleft[0]
+        small_fence_width = horizontal_fence.get_width() + 5
+        number_of_small_hfences = math.ceil(full_fence_width / small_fence_width)
+        for i in range(number_of_small_hfences):
+            screen.blit(horizontal_fence,(co.rb_topleft[0] + small_fence_width * i, co.rb_topleft[1]))
+            screen.blit(horizontal_fence,(co.rb_botleft[0] + small_fence_width * i, co.rb_botleft[1]))
 
-            allobjects.draw(screen)
-            dyingSheepObjects.draw(screen)
+        allobjects.draw(screen)
+        dyingSheepObjects.draw(screen)
 
-            # Draw tree
-            screen.blit(tree,tree_pos)
-        else:
-            screen.blit(snapshot, (-500, -200))
-
+        # Draw tree
+        screen.blit(tree,tree_pos)
+        if show_picture:
+            screen.blit(goat, goat_dest)
 
         if currentLevel.is_stopped() and not reaction.ask_picture_question and not reaction.win:
             text = font.render("Press enter to reset", True, (10, 10, 10))
