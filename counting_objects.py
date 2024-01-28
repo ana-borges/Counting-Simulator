@@ -6,6 +6,7 @@ import math
 main_dir = os.path.split(os.path.abspath(__file__))[0]
 data_dir = os.path.join(main_dir, "assets")
 
+# These specific dimensions make the fence look closed
 screen_width = 1000
 screen_height = 992
 
