@@ -54,6 +54,7 @@ def main():
 
     # Get the tree
     tree, tree_rect = co.load_image("tree.png",-1,0.5)
+    tree_pos = (200,200)
 
     # Get X
     errorScreen, errorScreenRect = co.load_image("x.png",-1,8)
@@ -101,8 +102,12 @@ def main():
                         screen.blit(snapshot, (-500, -200))
                         show_picture = True
                     elif event.type == pg.KEYDOWN and event.key == pg.K_n:
+                        # Make a new sheep appear from behind the tree
+                        tree_sheep = co.CountingObject(initialPos=tree_pos)
+                        allobjects.add(tree_sheep)
                         pg.mixer.Sound.play(pg.mixer.Sound("sounds/NO_PICTURE.wav"))
                         reaction.ask_picture_question = False
+
             else:
                 for event in events:
                     if event.type == pg.QUIT:
@@ -164,7 +169,7 @@ def main():
             dyingSheepObjects.draw(screen)
 
             # Draw tree
-            screen.blit(tree,(200, 200))
+            screen.blit(tree,tree_pos)
         else:
             screen.blit(snapshot, (-500, -200))
 
