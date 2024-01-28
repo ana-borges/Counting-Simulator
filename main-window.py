@@ -36,6 +36,7 @@ def main():
         return 1
 
     font = pg.font.Font("assets/Minecraft.ttf", 48)
+    font2 = pg.font.Font("assets/Minecraft.ttf", 20)
 
     # Display The Background
     screen.blit(background, (0, 0))
@@ -226,6 +227,11 @@ def main():
         screen.blit(banner,((co.screen_width-600)/2,0))
         text = font.render("3, 2, 5 Can you count?", True, (0, 0, 0))
         textpos = text.get_rect(x=(co.screen_width-600)/2 + 30, y=1)
+        screen.blit(text, textpos)
+
+
+        text = font2.render("GGJ 2024", True, (0, 0, 0))
+        textpos = text.get_rect(x=co.screen_width-95, y=co.screen_height-20)
         screen.blit(text, textpos)
 
         pg.display.flip()
