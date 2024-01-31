@@ -1,5 +1,6 @@
 import math
 import random
+import asyncio
 
 import pygame as pg
 import pygame_textinput as ti
@@ -13,7 +14,7 @@ if not pg.font:
 if not pg.mixer:
     print("Warning, sound disabled")
 
-def main():
+async def main():
     """this function is called when the program starts.
     it initializes everything it needs, then runs in
     a loop until the function returns."""
@@ -236,12 +237,10 @@ def main():
 
         pg.display.flip()
 
+        await asyncio.sleep(0)
+
     pg.quit()
 
 
-# Game Over
-
-
-# this calls the 'main' function when this script is executed
-if __name__ == "__main__":
-    main()
+# This is the program entry point:
+asyncio.run(main())

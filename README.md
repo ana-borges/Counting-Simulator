@@ -32,7 +32,7 @@ The font is the [Minecraft Font by Craftron Gaming][font].
 ### Run
 
 ```
-python3 main-window.py
+python3 main.py
 ```
 
 ### Generate executable
@@ -43,7 +43,7 @@ pyinstaller --onefile \
     --name 325-can-you-count \
     --add-data assets:assets \
     --add-data sounds:sounds \
-    main-window.py
+    main.py
 cp -r assets dist/
 cp -r sounds dist/
 ```
