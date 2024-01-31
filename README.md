@@ -35,7 +35,19 @@ The font is the [Minecraft Font by Craftron Gaming][font].
 - Repository is cloned
 - A python environment with the packages listed in `requirements.txt`
 
-### Run
+### Run in a browser
+
+From outside the git directory:
+```
+pygbag Counting-Simulator
+```
+
+Point your browser at http://localhost:8000 (or  http://localhost:8000#debug
+for debugging purposes).
+
+This doesn't work with Firefox, see [pygbag#129][issue-129].
+
+### Run locally
 
 ```
 python3 main.py
@@ -73,3 +85,4 @@ tar -zcvf 3_2_5_can_you_count.tar.gz dist/
 [CC-BY-NC-SA]: https://creativecommons.org/licenses/by-nc-sa/4.0/
 [MIT]: https://mit-license.org/
 [GGJ]: https://globalgamejam.org/games/2024/3-2-5-can-you-count-2
+[issue-129]: https://github.com/pygame-web/pygbag/issues/129

@@ -91,6 +91,11 @@ async def main():
         clock.tick(fps)
         events = pg.event.get()
         if reaction.win:
+            # I don't know why this is needed here and not in other places, but
+            # without it, the game gets stuck in an infinite loop when compiled
+            # with pygbag
+            # See https://github.com/pygame-web/pygbag/issues/123
+            await asyncio.sleep(0)
             if pg.mixer.get_busy():
                 continue
             for event in events:
@@ -102,6 +107,11 @@ async def main():
             allobjects.update(True, None)
             dyingSheepObjects.update(True, None)
         elif currentLevel.is_stopped():
+            # I don't know why this is needed here and not in other places, but
+            # without it, the game gets stuck in an infinite loop when compiled
+            # with pygbag
+            # See https://github.com/pygame-web/pygbag/issues/123
+            await asyncio.sleep(0)
             if reaction.ask_picture_question:
                 if pg.mixer.get_busy():
                     continue
