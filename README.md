@@ -14,6 +14,12 @@ This game was created as part of the [Global Game Jam 2024][GGJ] using
 - Nils Roth
 - Jorge Simões
 
+### Packages
+
+The package [Pygame Text Input][textinput] is vendored instead of installed
+because otherwise pygbag can't use it. It is distributed under the [MIT
+License][MIT].
+
 ### Assets
 
 The goat assets were created by [Sevarihk][goats] and are distributed under
@@ -60,8 +66,10 @@ tar -zcvf 3_2_5_can_you_count.tar.gz dist/
 2. Run it as usual for your OS
 
 [pygame]: https://www.pygame.org/
+[textinput]: https://github.com/Nearoo/pygame-text-input
 [goats]: https://opengameart.org/content/mountain-goat-sprites
 [font]: https://www.dafont.com/minecraft.font
 [CC-BY]: https://creativecommons.org/licenses/by/4.0/
 [CC-BY-NC-SA]: https://creativecommons.org/licenses/by-nc-sa/4.0/
+[MIT]: https://mit-license.org/
 [GGJ]: https://globalgamejam.org/games/2024/3-2-5-can-you-count-2
