@@ -54,7 +54,7 @@ class Correct(ReactionInterface):
 
 class CorrectPicture(ReactionInterface):
     def __init__(self, all_objects: pg.sprite.Group):
-        self._soundFile: str = random.choice(["sounds/PICTURE_QUESTION.wav"])
+        self._soundFile: str = "sounds/PICTURE_QUESTION.wav"
         self._failureSound = pg.mixer.Sound(self._soundFile)
         self._allObjects = all_objects
         return
@@ -68,7 +68,7 @@ class CorrectPicture(ReactionInterface):
 
 class DeadSheep(ReactionInterface):
     def __init__(self, all_objects: pg.sprite.Group):
-        self._soundFile: str = random.choice(["sounds/DEAD_GOAT.wav"])
+        self._soundFile: str = "sounds/DEAD_GOAT.wav"
         self._failureSound = pg.mixer.Sound(self._soundFile)
         self._allObjects = all_objects
         return
