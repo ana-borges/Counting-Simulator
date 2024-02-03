@@ -15,8 +15,7 @@ class ReactionInterface:
 class WrongNumber(ReactionInterface):
     def execute(self):
         sound_file: str = random.choice(["sounds/UH_YOU_SUCK.wav", "sounds/BUZZER.wav", "sounds/TRY_AGAIN.wav",
-                                         "sounds/SO_WRONG_IDIOT.wav", "sounds/COUNT_FEET.wav", "sounds/DRUNK.wav",
-                                         "sounds/SOCIETY.wav"])
+                                         "sounds/SO_WRONG_IDIOT.wav", "sounds/COUNT_FEET.wav", "sounds/DRUNK.wav"])
         pg.mixer.Sound.play(pg.mixer.Sound(sound_file))
         return
 
@@ -24,8 +23,7 @@ class WrongNumber(ReactionInterface):
 class NoNumber(ReactionInterface):
 
     def execute(self):
-        sound_file: str = random.choice(["sounds/ARE_YOU_DUMB_THIS_IS_NOT_EVEN_A_NUMBER.wav", "sounds/DO_YOU_TRY.wav",
-                                         "sounds/NORMAL_PEOPLE_NUMBERS.wav", "sounds/TEACH_COUNTING.wav"])
+        sound_file: str = random.choice(["sounds/ARE_YOU_DUMB_THIS_IS_NOT_EVEN_A_NUMBER.wav", "sounds/DO_YOU_TRY.wav"])
         pg.mixer.Sound.play(pg.mixer.Sound(sound_file))
         return
 
@@ -34,7 +32,7 @@ class Timeout(ReactionInterface):
 
     def execute(self):
         sound_file: str = random.choice(["sounds/YOUR_MUM_IS_SO_SLOW.wav", "sounds/CONCENTRATE.wav",
-                                         "sounds/SO_SLOW.wav", "sounds/DIE_STUPIDITY.wav"])
+                                         "sounds/SO_SLOW.wav"])
         pg.mixer.Sound.play(pg.mixer.Sound(sound_file))
         return
 
