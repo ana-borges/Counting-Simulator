@@ -155,6 +155,11 @@ async def main():
                         show_picture = False
                         reaction.deadSheep = False
         else:
+            # I don't know why this is needed here and not in other places, but
+            # without it, the game gets stuck in an infinite loop when compiled
+            # with pygbag
+            # See https://github.com/pygame-web/pygbag/issues/123
+            await asyncio.sleep(0)
             timer = currentLevel.check_time_left()
 
             # Handle Input Events
@@ -216,10 +221,20 @@ async def main():
         
 
         if not currentLevel.is_stopped() and not reaction.win:
+            # I don't know why this is needed here and not in other places, but
+            # without it, the game gets stuck in an infinite loop when compiled
+            # with pygbag
+            # See https://github.com/pygame-web/pygbag/issues/123
+            await asyncio.sleep(0)
             textinput.update(events)
             screen.blit(textinput.surface, (background.get_width() / 2 - 100, textpos[1] + 50), (0,0,300,100))
 
         if currentLevel.is_stopped() and errorScreenTimer <= 3*fps and not reaction.ask_picture_question and not show_picture and not reaction.win:
+            # I don't know why this is needed here and not in other places, but
+            # without it, the game gets stuck in an infinite loop when compiled
+            # with pygbag
+            # See https://github.com/pygame-web/pygbag/issues/123
+            await asyncio.sleep(0)
             screen.blit(errorScreen,(0,0))
             errorScreenTimer += 1
 
